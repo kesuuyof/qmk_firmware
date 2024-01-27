@@ -19,6 +19,8 @@ enum custom_keycodes {
   C_A_G,
 };
 
+static bool except_mo3 = false;
+
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     switch (keycode) {
     case C_S_A_G:
@@ -47,6 +49,27 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
             unregister_code(KC_RCTL);
             unregister_code(KC_RALT);
             unregister_code(KC_RGUI);
+        }
+        break;
+    case MO(3):
+        // MO(3)を単体で押すとハイフン
+        if (record->event.pressed) {
+            // キーコード MO(3) が押された時
+            except_mo3 = false;
+        } else {
+            // キーコード MO(3) が放された時
+            if (!except_mo3) {
+                register_code(KC_MINS);
+                unregister_code(KC_MINS);
+            }
+        }
+        break;
+    default:
+        if (record->event.pressed) {
+            // キーコード keycode が押された時
+            except_mo3 = true;
+        } else {
+            // キーコード keycode が放された時
         }
         break;
     }

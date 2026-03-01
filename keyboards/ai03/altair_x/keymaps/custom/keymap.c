@@ -3,11 +3,27 @@
 
 #include QMK_KEYBOARD_H
 
+enum custom_keycodes {
+    MAC_SSHOT = SAFE_RANGE,   // ⌘⇧4（範囲選択スクショ）
+    // MAC_SSHOT_WIN,          // （必要なら後述の「ウィンドウ撮る」版）
+};
+
+bool process_record_user(uint16_t keycode, keyrecord_t *record) {
+    switch (keycode) {
+        case MAC_SSHOT:
+            if (record->event.pressed) {
+                tap_code16(G(S(KC_4)));   // Cmd+Shift+4
+            }
+            return false;
+    }
+    return true;
+}
+
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
     [0] = LAYOUT(
         KC_TAB,  KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,    KC_GRV , XXXXXXX, KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,    KC_BSPC,
-        KC_LCTL, KC_A,    KC_S,    KC_D,    KC_F,    KC_G,    XXXXXXX, XXXXXXX, KC_H,    KC_J,    KC_K,    KC_L,    KC_SCLN, KC_QUOT,
+        KC_LCTL, KC_A,    KC_S,    KC_D,    KC_F,    KC_G,  MAC_SSHOT, XXXXXXX, KC_H,    KC_J,    KC_K,    KC_L,    KC_SCLN, KC_QUOT,
         KC_LSFT, KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,    XXXXXXX, KC_B,    KC_N,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH, KC_ENT,
                                    KC_LALT, KC_LGUI, MO(1),   KC_SPC,  KC_RSFT, MO(2),   KC_RALT, KC_DEL
     ),
@@ -15,7 +31,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [1] = LAYOUT(
         KC_ESC,  KC_1,    KC_2,    KC_3,    KC_4,    KC_5,    _______, _______, KC_6,    KC_7,    KC_8,    KC_9,    KC_0,    _______,
         KC_LGUI, KC_GRV,  KC_LBRC, KC_LCBR, KC_LPRN, KC_MINS, KC_UNDS, _______, KC_EQL,  KC_RPRN, KC_RCBR, KC_RBRC, KC_BSLS, _______,
-        KC_LSFT, KC_TILD, _______, _______, _______, KC_F5,   _______, _______, KC_PLUS, _______, _______, _______, KC_PIPE, _______,
+        _______, KC_TILD, _______, _______, _______, KC_F5,   _______, _______, KC_PLUS, _______, _______, _______, KC_PIPE, _______,
                                    MO(3),   _______, _______, _______, _______, _______, _______, _______
     ),
 
